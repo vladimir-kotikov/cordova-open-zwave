@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+    <plugin id="cordova-open-zwave"
+            version="0.0.1"
+            xmlns="http://apache.org/cordova/ns/plugins/1.0"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <name>OpenZWave</name>
+
+    <platform name="windows">
+
+        <js-module name="OpenZWave" src="www/OpenZWave.js">
+            <clobbers target="cordova.plugins.OpenZWave" />
+        </js-module>
+
+        <js-module name="OpenZWave" src="src/windows/OpenZWaveProxy.js">
+            <runs target="" />
+        </js-module>
+
+        <framework type="projectReference"
+                   src="lib/windows/open-zwave/build/winRT/vs2015/OpenZWaveProxy.vcxproj"
+                   versions="10.0" />
+    </platform>
+</plugin>
