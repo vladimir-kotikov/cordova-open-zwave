@@ -5,12 +5,16 @@ var zwavePlugin = {
     connect: function (port, success, error) {
         checkArgs('sfF', 'cordova-open-zwave.OpenZWave.connect', arguments);
 
-        cordova.exec(success, error, 'OpenZWave', "connect", [port]);
+        cordova.exec(success, function (msg) {
+            error(new Error(msg));
+        }, 'OpenZWave', "connect", [port]);
     },
     connectFake: function (port, success, error) {
         checkArgs('sfF', 'cordova-open-zwave.OpenZWave.connect', arguments);
 
-        cordova.exec(success, error, 'OpenZWave', "connectFake", [port, true]);
+        cordova.exec(success, function (msg) {
+            error(new Error(msg));
+        }, 'OpenZWave', "connectFake", [port, true]);
     }
 };
 
