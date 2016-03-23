@@ -52,7 +52,7 @@ void OnNotification(Notification const * _notification, void * proxy) {
 
 		case Notification::Type_DriverFailed:
 		{
-			_proxyInstance->ReportError("driverFailed");
+			_proxyInstance->ReportError("Driver failed to start");
 			break;
 		}
 
@@ -113,6 +113,15 @@ void Proxy::start(String ^ portName, SuccessHandler ^ successCallback, ErrorHand
 	this->manager->AddWatcher(OnNotification, NULL);
 	this->manager->AddDriver(port);
 }
+
+void Proxy::Destroy() {
+	Manager::Destroy();
+	this->manager = nullptr;
+	this->OnSuccess = nullptr;
+	this->OnError= nullptr;
+}
+
+
 
 void Proxy::ReportSuccess(String^ status, String^ nodeId, String^ homeId) 
 {

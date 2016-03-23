@@ -20,6 +20,9 @@ namespace OZWProxy
     public:
         Proxy();
 		void start(String^ portName, SuccessHandler^ successCallback, ErrorHandler^ errorCallback);
+		void Destroy();
+
+		// TODO: this should NOT be exposed
 		void ReportSuccess(String^ status, String^ nodeId, String^ homeId);
 		void ReportError(String^ message);
     };
