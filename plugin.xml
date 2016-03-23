@@ -19,5 +19,9 @@
         <framework type="projectReference"
                    src="lib/windows/open-zwave/build/winRT/vs2015/OpenZWaveProxy.vcxproj"
                    versions="10.0" />
+
+        <framework type="projectReference"
+                   src="lib/windows/open-zwave/build/winRT/vs2015/OpenZWave.vcxproj"
+                   versions="10.0" />
     </platform>
 </plugin>
