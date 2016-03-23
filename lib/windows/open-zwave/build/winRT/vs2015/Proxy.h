@@ -1,41 +1,25 @@
 ﻿#pragma once
 
-//#include "Windows.h"
-//#include "Options.h"
-//#include "Manager.h"
-//#include "Driver.h"
-//#include "Node.h"
-//#include "Group.h"
+using namespace Platform;
+
 #include "Notification.h"
-//#include "value_classes/ValueStore.h"
-//#include "value_classes/Value.h"
-//#include "value_classes/ValueBool.h"
-//#include "platform/Log.h"
 
 using namespace OpenZWave;
 
-//typedef struct {
-//	String^ status;
-//	String^ nodeId;
-//	String^ homeId;
-//} SuccessEventArgs;
-//
-//typedef struct {
-//	String^ status;
-//	String^ message;
-//} ErrorEventArgs;
-
 namespace OZWProxy
 {
-    public ref class Proxy sealed
+	public delegate void SuccessHandler(String^ status, String^ nodeId, String^ homeId);
+	public delegate void ErrorHandler(String^ message);
+
+	public ref class Proxy sealed
     {
 	private:
-		//void onNotification(Notification const* _notification, void* _context);
+		Manager *manager;
+		void OnNotification(Notification const* _notification, void* _context);
+		SuccessHandler^ OnSuccess;
+		ErrorHandler^ OnError;
     public:
         Proxy();
-		//void start(String^ portName, SuccessHandler^ success, ErrorHandler^ error);
+		void start(String^ portName, SuccessHandler^ successCallback, ErrorHandler^ errorCallback);
     };
-
-	//public delegate void SuccessHandler(SuccessEventArgs evt);
-	//public delegate void ErrorHandler(ErrorEventArgs evt);
 }
