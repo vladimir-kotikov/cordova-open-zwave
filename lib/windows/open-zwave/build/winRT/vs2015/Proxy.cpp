@@ -20,13 +20,19 @@ void OnNotification(Notification const * _notification, void * proxy) {
 	// Must do this inside a critical section to avoid conflicts with the main thread
 	EnterCriticalSection(&g_criticalSection);
 
+	// test success call
+	/*uint32 const homeId = 1234;
+	uint8 const nodeId = 56;
+	_proxyInstance->ReportSuccess("nodeAdded", nodeId.ToString(), homeId.ToString());*/
+	
+
 	switch (_notification->GetType())
 	{
 		case Notification::Type_NodeAdded:
 		{
 			uint32 const homeId = _notification->GetHomeId();
 			uint8 const nodeId = _notification->GetNodeId();
-			_proxyInstance->ReportSuccess("nodeAdded", nullptr, nullptr);
+			_proxyInstance->ReportSuccess("nodeAdded", nodeId.ToString(), homeId.ToString());
 			break;
 		}
 
@@ -34,7 +40,7 @@ void OnNotification(Notification const * _notification, void * proxy) {
 		{
 			uint32 const homeId = _notification->GetHomeId();
 			uint8 const nodeId = _notification->GetNodeId();
-			_proxyInstance->ReportSuccess("nodeRempved", nullptr, nullptr);
+			_proxyInstance->ReportSuccess("nodeRemoved", nodeId.ToString(), homeId.ToString());
 			break;
 		}
 
@@ -102,9 +108,7 @@ void Proxy::start(String ^ portName, SuccessHandler ^ successCallback, ErrorHand
 
 	this->OnSuccess = successCallback;
 	this->OnError = errorCallback;
-
-	/*Manager::pfnOnNotification_t callback = Proxy::OnNotification;*/
-		
+	
 	// TODO: pass instace as context to get rid of _proxyInstance
 	this->manager->AddWatcher(OnNotification, NULL);
 	this->manager->AddDriver(port);
