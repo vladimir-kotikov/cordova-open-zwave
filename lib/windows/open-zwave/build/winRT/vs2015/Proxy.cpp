@@ -3,6 +3,8 @@
 
 #include "Manager.h"
 #include "Node.h"
+#include "..\..\..\..\src\Options.h"
+#include "..\..\..\..\src\platform\Log.h"
 
 using namespace OZWProxy;
 using namespace Platform;
@@ -77,14 +79,14 @@ void OnNotification(Notification const * _notification, void * proxy) {
 
 Proxy::Proxy()
 {
-	//Options::Create("../../../../../../config/", "", "");
-	//Options::Get()->AddOptionInt("SaveLogLevel", LogLevel_Detail);
-	//Options::Get()->AddOptionInt("QueueLogLevel", LogLevel_Debug);
-	//Options::Get()->AddOptionInt("DumpTrigger", LogLevel_Error);
-	//Options::Get()->AddOptionInt("PollInterval", 500);
-	//Options::Get()->AddOptionBool("IntervalBetweenPolls", true);
-	//Options::Get()->AddOptionBool("ValidateValueChanges", true);
-	//Options::Get()->Lock();
+	Options::Create("../../../../../../config/", "", "");
+	Options::Get()->AddOptionInt("SaveLogLevel", LogLevel_Detail);
+	Options::Get()->AddOptionInt("QueueLogLevel", LogLevel_Debug);
+	Options::Get()->AddOptionInt("DumpTrigger", LogLevel_Error);
+	Options::Get()->AddOptionInt("PollInterval", 500);
+	Options::Get()->AddOptionBool("IntervalBetweenPolls", true);
+	Options::Get()->AddOptionBool("ValidateValueChanges", true);
+	Options::Get()->Lock();
 
 	InitializeCriticalSection(&g_criticalSection);
 
