@@ -79,7 +79,7 @@ void OnNotification(Notification const * _notification, void * proxy) {
 
 Proxy::Proxy()
 {
-	Options::Create("../../../../../../config/", "", "");
+	Options::Create("./", "", "");
 	Options::Get()->AddOptionInt("SaveLogLevel", LogLevel_Detail);
 	Options::Get()->AddOptionInt("QueueLogLevel", LogLevel_Debug);
 	Options::Get()->AddOptionInt("DumpTrigger", LogLevel_Error);
