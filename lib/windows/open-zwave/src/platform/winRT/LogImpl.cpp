@@ -113,6 +113,17 @@ LogImpl::~LogImpl
 {
 }
 
+#include <Windows.h>
+#include <iostream>
+#include <sstream>
+
+#define DEBUG_OUTPUT( s )            \
+{                             \
+   std::wostringstream os_;    \
+   os_ << s;                   \
+   OutputDebugStringW( os_.str().c_str() );  \
+}
+
 //-----------------------------------------------------------------------------
 //	<LogImpl::Write>
 //	Write to the log
@@ -173,6 +184,8 @@ void LogImpl::Write
 				{
 					printf( "%s", lineBuf );
 					printf( "\n" );
+					DEBUG_OUTPUT(lineBuf);
+					DEBUG_OUTPUT("\n");
 				}
 
 			}
