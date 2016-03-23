@@ -1,4 +1,39 @@
 
+function FakeProxy() {
+    this.start = function (port, success, error) {
+        setTimeout(function () { success('driverReady'); }, 2000);
+
+        setTimeout(function () { success('nodeAdded', '1008', '564'); }, 4000);
+        setTimeout(function () { success('nodeAdded', '1028', '564'); }, 5000);
+        setTimeout(function () { success('nodeAdded', '1567', '580'); }, 3000);
+        setTimeout(function () {
+            success('nodeInfo', '1028', '564', {
+                manufacturer: 'ManufacturerOne',
+                manufacturerid: 'ManufacturerIdOne',
+                product: 'SomeProduct',
+                producttype: 'MaybeButton',
+                productid: 'KHAKHFASUIHFKSFHKSHFJA',
+                type: 'Button',
+                name: 'Button_KHAKHFASUIHFKSFHKSHFJA',
+                loc: '0.343243242356354'
+            });
+        }, 8000);
+        setTimeout(function () {
+            success('nodeInfo', '1008', '564', {
+                manufacturer: 'ManufacturerTwo',
+                manufacturerid: 'ManufacturerIdTwo',
+                product: 'SomeOtherProduct',
+                producttype: 'MaybeSwitch',
+                productid: 'LJASDOAISDOLAJDLAKSDJ',
+                type: 'Switch',
+                name: 'Switch_LJASDOAISDOLAJDLAKSDJ',
+                loc: 'Hall'
+            });
+        }, 10000);
+        setTimeout(function () { success('nodeRemoved', '1567', '580'); }, 12000);
+    }
+}
+
 var proxyInstance;
 
 var proxy = {
@@ -11,7 +46,10 @@ var proxy = {
         var nodes = {};
 
         var port = args[0];
-        proxyInstance = new OZWProxy.Proxy();
+        // This param is for testing purposes only
+        var useFakeProxy = !!args[1];
+
+        proxyInstance = useFakeProxy ? new FakeProxy() : new OZWProxy.Proxy();
         proxyInstance.start(port, function (status, nodeId, homeId, nodeInfo) {
 
             switch (status) {
