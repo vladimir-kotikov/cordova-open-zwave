@@ -46,7 +46,7 @@ void OnNotification(Notification const * _notification, void * proxy) {
 
 		case Notification::Type_DriverFailed:
 		{
-			_proxyInstance->ReportError("driverReady");
+			_proxyInstance->ReportError("driverFailed");
 			break;
 		}
 
@@ -112,10 +112,23 @@ void Proxy::start(String ^ portName, SuccessHandler ^ successCallback, ErrorHand
 
 void Proxy::ReportSuccess(String^ status, String^ nodeId, String^ homeId) 
 {
-	this->OnSuccess(status, nodeId, homeId);
+	Windows::UI::Core::CoreDispatcher^ dispatcher = Windows::ApplicationModel::Core::CoreApplication::MainView->CoreWindow->Dispatcher;
+
+	dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal,
+		ref new Windows::UI::Core::DispatchedHandler([=]() -> void
+	{
+		this->OnSuccess(status, nodeId, homeId);
+	}));
+	
 }
 
 void Proxy::ReportError(String^ message)
 {
-	this->OnError(message);
+	Windows::UI::Core::CoreDispatcher^ dispatcher = Windows::ApplicationModel::Core::CoreApplication::MainView->CoreWindow->Dispatcher;
+
+	dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal,
+		ref new Windows::UI::Core::DispatchedHandler([=]() -> void
+	{
+		this->OnError(message);
+	}));
 }
