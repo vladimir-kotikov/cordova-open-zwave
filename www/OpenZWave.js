@@ -7,6 +7,6 @@ var zwavePlugin = {
 
         cordova.exec(success, error, 'OpenZWave', "connect", [port]);
     }
-}
+};
 
 module.exports = zwavePlugin;

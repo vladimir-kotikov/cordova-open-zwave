@@ -1,3 +1,4 @@
+
 var proxyInstance;
 
 var proxy = {
@@ -11,26 +12,41 @@ var proxy = {
 
         var port = args[0];
         proxyInstance = new OZWProxy.Proxy();
-        proxyInstance.start(port, function (status, nodeId, homeId) {
-            if (status === 'driverReady') {
-                console.log('Driver ready');
-            }
+        proxyInstance.start(port, function (status, nodeId, homeId, nodeInfo) {
 
-            if (status === 'nodeAdded') {
-                nodes[nodeId] = homeId;
-            }
-
-            if (status === 'nodeRemoved' && nodes[nodeId]) {
-                delete nodes[nodeId];
+            switch (status) {
+                case 'driverReady':
+                    console.log('Driver ready');
+                    break;
+                case 'nodeAdded':
+                    nodes[nodeId] = { homeId: homeId };
+                    break;
+                case 'nodeRemoved':
+                    if (nodes[nodeId]) delete nodes[nodeId];
+                    break;
+                case 'nodeInfo':
+                    Object.keys(nodeInfo).forEach(function (infoKey) {
+                        node[nodeId][infoKey] = nodeInfo[infoKey];
+                    });
+                    break;
             }
 
             var result = Object.keys(nodes)
-                .map(function (nodeId) {
-                    return { nodeId: nodeId, homeId: nodes[nodeId] };
-                });
+            .map(function (nodeId) {
+                return { nodeId: nodeId, homeId: nodes[nodeId] };
+            });
 
             succcess(result, { keepCallback: true });
-        }, error);
+        }, function (err) {
+            proxy.stop();
+            error(new Error(err));
+        });
+    },
+    stop: function (success, error, args) {
+        if (proxyInstance) {
+            proxyInstance.destroy();
+            proxyInstance = null;
+        }
     }
 };
 

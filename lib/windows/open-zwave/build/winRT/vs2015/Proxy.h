@@ -8,7 +8,18 @@ using namespace OpenZWave;
 
 namespace OZWProxy
 {
-	public delegate void SuccessHandler(String^ status, String^ nodeId, String^ homeId);
+	public value struct NodeInfo {
+		String^ manufacturer;
+		String^ manufacturerid;
+		String^ product;
+		String^ producttype;
+		String^ productid;
+		String^ type;
+		String^ name;
+		String^ loc;
+	};
+
+	public delegate void SuccessHandler(String^ status, String^ nodeId, String^ homeId, NodeInfo info);
 	public delegate void ErrorHandler(String^ message);
 
 	public ref class Proxy sealed
@@ -24,6 +35,7 @@ namespace OZWProxy
 
 		// TODO: this should NOT be exposed
 		void ReportSuccess(String^ status, String^ nodeId, String^ homeId);
+		void ReportSuccess(String^ status, String^ nodeId, String^ homeId, NodeInfo info);
 		void ReportError(String^ message);
     };
 }
