@@ -1,5 +1,12 @@
 var exec = require('cordova/exec');
+var checkArgs = require('cordova/argscheck').checkArgs;
 
-exports.coolMethod = function(arg0, success, error) {
-    exec(success, error, "OpenZWave", "coolMethod", [arg0]);
-};
+var zwavePlugin = {
+    connect: function (port, success, error) {
+        checkArgs('sfF', 'cordova-open-zwave.OpenZWave.connect', arguments);
+
+        cordova.exec(success, error, 'OpenZWave', "connect", [port]);
+    }
+}
+
+module.exports = zwavePlugin;
