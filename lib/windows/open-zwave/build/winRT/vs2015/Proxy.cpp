@@ -26,15 +26,29 @@ void OnNotification(Notification const * _notification, void * proxy) {
 	// test success call
 	// uint32 const homeId = 1234;
 	// uint8 const nodeId = 56;
+
+	// Manager *manager = Manager::Get();
+	// NodeInfo nodeInfo({
+	// 	  toStr("/* manufacturer */"),
+	// 	  toStr("/* manufacturerid */"),
+	// 	  toStr("/* product */"),
+	// 	  toStr("/* producttype */"),
+	// 	  toStr("/* productid */"),
+	// 	  toStr("/* type */"),
+	// 	  toStr("/* name */"),
+	// 	  toStr("/* loc */")
+	// });
+
+	// _proxyInstance->ReportSuccess("nodeInfo", nodeId.ToString(), homeId.ToString(), nodeInfo);
 	// _proxyInstance->ReportSuccess("nodeAdded", nodeId.ToString(), homeId.ToString());
-	
+
 	switch (_notification->GetType())
 	{
 		case Notification::Type_NodeAdded:
 		{
 			uint32 const homeId = _notification->GetHomeId();
 			uint8 const nodeId = _notification->GetNodeId();
-			
+
 			_proxyInstance->ReportSuccess("nodeAdded", nodeId.ToString(), homeId.ToString());
 			break;
 		}
@@ -118,7 +132,7 @@ Proxy::Proxy()
 	Options::Get()->AddOptionBool("IntervalBetweenPolls", true);
 	Options::Get()->AddOptionBool("ValidateValueChanges", true);
 	Options::Get()->Lock();
-	
+
 	InitializeCriticalSection(&g_criticalSection);
 
 	this->manager = Manager::Create();
@@ -132,7 +146,7 @@ void Proxy::start(String ^ portName, SuccessHandler ^ successCallback, ErrorHand
 
 	this->OnSuccess = successCallback;
 	this->OnError = errorCallback;
-	
+
 	// TODO: pass instace as context to get rid of _proxyInstance
 	this->manager->AddWatcher(OnNotification, NULL);
 	this->manager->AddDriver(port);
