@@ -19,26 +19,26 @@ var proxy = {
                     console.log('Driver ready');
                     break;
                 case 'nodeAdded':
-                    nodes[nodeId] = { homeId: homeId };
+                    nodes[nodeId] = { nodeId: nodeId, homeId: homeId };
                     break;
                 case 'nodeRemoved':
                     if (nodes[nodeId]) delete nodes[nodeId];
                     break;
                 case 'nodeInfo':
+                    if (!nodes[nodeId]) nodes[nodeId] = { nodeId: nodeId, homeId: homeId };
                     Object.keys(nodeInfo).forEach(function (infoKey) {
-                        node[nodeId][infoKey] = nodeInfo[infoKey];
+                        nodes[nodeId][infoKey] = nodeInfo[infoKey];
                     });
                     break;
             }
 
             var result = Object.keys(nodes)
             .map(function (nodeId) {
-                return { nodeId: nodeId, homeId: nodes[nodeId] };
+                return nodes[nodeId];
             });
 
             succcess(result, { keepCallback: true });
         }, function (err) {
-            proxy.stop();
             error(new Error(err));
         });
     },
