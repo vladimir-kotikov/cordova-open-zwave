@@ -12,8 +12,8 @@
             <clobbers target="cordova.plugins.OpenZWave" />
         </js-module>
 
-        <js-module name="OpenZWave" src="src/windows/OpenZWaveProxy.js">
-            <runs target="" />
+        <js-module name="OpenZWaveProxy" src="src/windows/OpenZWaveProxy.js">
+            <runs />
         </js-module>
 
         <framework type="projectReference"
