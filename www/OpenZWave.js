@@ -14,7 +14,7 @@ var zwavePlugin = {
 
         cordova.exec(success, function (msg) {
             error(new Error(msg));
-        }, 'OpenZWave', "connectFake", [port, true]);
+        }, 'OpenZWave', "connect", [port, true]);
     }
 };
 
