@@ -15,11 +15,12 @@ namespace OZWProxy
     {
 	private:
 		Manager *manager;
-		void OnNotification(Notification const* _notification, void* _context);
 		SuccessHandler^ OnSuccess;
 		ErrorHandler^ OnError;
     public:
         Proxy();
 		void start(String^ portName, SuccessHandler^ successCallback, ErrorHandler^ errorCallback);
+		void ReportSuccess(String^ status, String^ nodeId, String^ homeId);
+		void ReportError(String^ message);
     };
 }

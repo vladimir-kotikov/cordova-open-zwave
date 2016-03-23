@@ -6,40 +6,15 @@
 
 using namespace OZWProxy;
 using namespace Platform;
+//using namespace System;
+//using namespace System::Runtime::InteropServices;
 
 static CRITICAL_SECTION g_criticalSection;
 
-Proxy::Proxy()
-{
-	//Options::Create("../../../../../../config/", "", "");
-	//Options::Get()->AddOptionInt("SaveLogLevel", LogLevel_Detail);
-	//Options::Get()->AddOptionInt("QueueLogLevel", LogLevel_Debug);
-	//Options::Get()->AddOptionInt("DumpTrigger", LogLevel_Error);
-	//Options::Get()->AddOptionInt("PollInterval", 500);
-	//Options::Get()->AddOptionBool("IntervalBetweenPolls", true);
-	//Options::Get()->AddOptionBool("ValidateValueChanges", true);
-	//Options::Get()->Lock();
+static Proxy^ _proxyInstance;
 
-	InitializeCriticalSection(&g_criticalSection);
+void OnNotification(Notification const * _notification, void * proxy) {
 
-	this->manager = Manager::Create();
-	//proxyInstance = this;
-}
-
-void Proxy::start(String ^ portName, SuccessHandler ^ successCallback, ErrorHandler ^ errorCallback)
-{
-	std::wstring wsstr(portName->Data());
-	std::string port(wsstr.begin(), wsstr.end());
-
-	this->OnSuccess = successCallback;
-	this->OnError = errorCallback;
-	
-	this->manager->AddWatcher(this->OnNotification, NULL);
-	this->manager->AddDriver(port);
-}
-
-void Proxy::OnNotification(Notification const * _notification, void * proxy)
-{
 	// Must do this inside a critical section to avoid conflicts with the main thread
 	EnterCriticalSection(&g_criticalSection);
 
@@ -49,7 +24,7 @@ void Proxy::OnNotification(Notification const * _notification, void * proxy)
 		{
 			uint32 const homeId = _notification->GetHomeId();
 			uint8 const nodeId = _notification->GetNodeId();
-			this->OnSuccess("nodeAdded", nullptr, nullptr);
+			_proxyInstance->ReportSuccess("nodeAdded", nullptr, nullptr);
 			break;
 		}
 
@@ -57,19 +32,19 @@ void Proxy::OnNotification(Notification const * _notification, void * proxy)
 		{
 			uint32 const homeId = _notification->GetHomeId();
 			uint8 const nodeId = _notification->GetNodeId();
-			this->OnSuccess("nodeRempved", nullptr, nullptr);
+			_proxyInstance->ReportSuccess("nodeRempved", nullptr, nullptr);
 			break;
 		}
 
 		case Notification::Type_DriverReady:
 		{
-			this->OnSuccess("driverReady", nullptr, nullptr);
+			_proxyInstance->ReportSuccess("driverReady", nullptr, nullptr);
 			break;
 		}
 
 		case Notification::Type_DriverFailed:
 		{
-			this->OnError("driverReady");
+			_proxyInstance->ReportError("driverReady");
 			break;
 		}
 
@@ -98,4 +73,46 @@ void Proxy::OnNotification(Notification const * _notification, void * proxy)
 	}
 
 	LeaveCriticalSection(&g_criticalSection);
+}
+
+Proxy::Proxy()
+{
+	//Options::Create("../../../../../../config/", "", "");
+	//Options::Get()->AddOptionInt("SaveLogLevel", LogLevel_Detail);
+	//Options::Get()->AddOptionInt("QueueLogLevel", LogLevel_Debug);
+	//Options::Get()->AddOptionInt("DumpTrigger", LogLevel_Error);
+	//Options::Get()->AddOptionInt("PollInterval", 500);
+	//Options::Get()->AddOptionBool("IntervalBetweenPolls", true);
+	//Options::Get()->AddOptionBool("ValidateValueChanges", true);
+	//Options::Get()->Lock();
+
+	InitializeCriticalSection(&g_criticalSection);
+
+	this->manager = Manager::Create();
+	_proxyInstance = this;
+}
+
+void Proxy::start(String ^ portName, SuccessHandler ^ successCallback, ErrorHandler ^ errorCallback)
+{
+	std::wstring wsstr(portName->Data());
+	std::string port(wsstr.begin(), wsstr.end());
+
+	this->OnSuccess = successCallback;
+	this->OnError = errorCallback;
+
+	/*Manager::pfnOnNotification_t callback = Proxy::OnNotification;*/
+		
+	// TODO: pass instace as context to get rid of _proxyInstance
+	this->manager->AddWatcher(OnNotification, NULL);
+	this->manager->AddDriver(port);
+}
+
+void Proxy::ReportSuccess(String^ status, String^ nodeId, String^ homeId) 
+{
+	this->OnSuccess(status, nodeId, homeId);
+}
+
+void Proxy::ReportError(String^ message)
+{
+	this->OnError(message);
 }
