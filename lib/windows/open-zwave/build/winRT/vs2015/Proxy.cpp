@@ -83,11 +83,12 @@ Proxy::Proxy()
 	Options::Get()->AddOptionInt("SaveLogLevel", LogLevel_Detail);
 	Options::Get()->AddOptionInt("QueueLogLevel", LogLevel_Debug);
 	Options::Get()->AddOptionInt("DumpTrigger", LogLevel_Error);
+	Options::Get()->AddOptionInt("DriverMaxAttempts", 3);
 	Options::Get()->AddOptionInt("PollInterval", 500);
 	Options::Get()->AddOptionBool("IntervalBetweenPolls", true);
 	Options::Get()->AddOptionBool("ValidateValueChanges", true);
 	Options::Get()->Lock();
-
+	
 	InitializeCriticalSection(&g_criticalSection);
 
 	this->manager = Manager::Create();
